@@ -5,14 +5,13 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Optional;
 
-import com.devsuperior.dsmeta.entities.Seller;
-import com.devsuperior.dsmeta.projections.SaleMinProjection;
+import com.devsuperior.dsmeta.projections.SaleReportProjection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.devsuperior.dsmeta.dto.SaleMinDTO;
+import com.devsuperior.dsmeta.dto.SaleReportDTO;
 import com.devsuperior.dsmeta.entities.Sale;
 import com.devsuperior.dsmeta.repositories.SaleRepository;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,14 +23,14 @@ public class SaleService {
 	private SaleRepository repository;
 	
 	@Transactional(readOnly = true)
-	public SaleMinDTO findById(Long id) {
+	public SaleReportDTO findById(Long id) {
 		Optional<Sale> result = repository.findById(id);
 		Sale entity = result.get();
-		return new SaleMinDTO(entity);
+		return new SaleReportDTO(entity);
 	}
 	
 	@Transactional(readOnly = true)
-	public Page<SaleMinDTO> getReport(String minDate, String maxDate, String name, Pageable pageable) {
+	public Page<SaleReportDTO> getReport(String minDate, String maxDate, String sellerName, Pageable pageable) {
 		
 		// verificando se as datas estão vazias para aplicar os valores default
 		LocalDate startDate;
@@ -48,8 +47,8 @@ public class SaleService {
 		} else {
 			startDate = endDate.minusYears(1L);
 		}
-		Page<SaleMinProjection> pageSeller = repository.salesReport(startDate.toString(), endDate.toString(), name, pageable);
-		Page<SaleMinDTO> dto = pageSeller.map(x -> new SaleMinDTO(x));
+		Page<SaleReportProjection> pageSeller = repository.salesReport(startDate.toString(), endDate.toString(), sellerName, pageable);
+		Page<SaleReportDTO> dto = pageSeller.map(x -> new SaleReportDTO(x));
 		return dto;
 	}
 }

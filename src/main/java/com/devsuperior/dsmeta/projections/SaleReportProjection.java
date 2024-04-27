@@ -2,9 +2,9 @@ package com.devsuperior.dsmeta.projections;
 
 import java.time.LocalDate;
 
-public interface SaleMinProjection {
+public interface SaleReportProjection {
     Long getId();
-    Double getAmount();
     LocalDate getDate();
-    String getName();
+    Double getAmount();
+    String getSellerName();
 }
