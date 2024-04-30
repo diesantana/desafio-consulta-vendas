@@ -18,8 +18,14 @@ public interface SaleRepository extends JpaRepository<Sale, Long> {
             "FROM tb_sales " +
             "JOIN tb_seller ON tb_sales.seller_id = tb_seller.id " +
             "WHERE tb_sales.date BETWEEN :minDate AND :maxDate " +
-            "AND UPPER(tb_seller.name) LIKE UPPER(CONCAT('%',:sellerName, '%'))")
+            "AND UPPER(tb_seller.name) LIKE UPPER(CONCAT('%',:sellerName, '%'))",
+            countQuery = "SELECT COUNT(tb_sales.id) " +
+                        "FROM tb_sales " +
+                        "JOIN tb_seller ON tb_sales.seller_id = tb_seller.id " +
+                        "WHERE tb_sales.date BETWEEN :minDate AND :maxDate " +
+                        "AND UPPER(tb_seller.name) LIKE UPPER(CONCAT('%',:sellerName, '%'))")
     Page<SaleReportProjection> salesReport(String minDate, String maxDate, String sellerName, Pageable pageable);
+    
 
     @Query(nativeQuery = true, value =
             "SELECT SUM(tb_sales.amount) AS total, tb_seller.name AS sellerName " + 
